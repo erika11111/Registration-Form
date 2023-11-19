@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles from "./register.module.css";
 // regex statements: user regex - used for username validation
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
-const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{5,23}$/;
 
 export default function Register() {
   //user referance
@@ -144,7 +144,7 @@ export default function Register() {
           }
         >
           <FontAwesomeIcon icon={faInfoCircle} />
-          4 to 24 characters.
+          6 to 24 characters.
           <br />
           Must include uppercase and lowercase letters, a number and a special
           character.
@@ -156,6 +156,44 @@ export default function Register() {
           <span aria-label="dollar sign">$</span>{" "}
           <span aria-label="percent">%</span>
         </p>
+        <label htmlFor="confirm_pwd">
+          Confirm Password:
+          <FontAwesomeIcon
+            icon={faCheck}
+            className={validMatch && matchPwd ? "valid" : "hide"}
+          />
+          <FontAwesomeIcon
+            icon={faTimes}
+            className={validMatch || !matchPwd ? "hide" : "invalid"}
+          />
+        </label>
+        {/*PASSWORD CONFIRMATION INPUT*/}
+        <input
+          type="password"
+          id="confirm_pwd"
+          onChange={(e) => setMatchPwd(e.target.value)}
+          value={matchPwd}
+          required
+          aria-invalid={validMatch ? "false" : "true"}
+          aria-describedby="confirmnote"
+          onFocus={() => setMatchFocus(true)}
+          onBlur={() => setMatchFocus(false)}
+        />
+        <p
+          id="confirmnote"
+          className={
+            matchFocus && !validMatch ? styles.instructions : styles.offscreen
+          }
+        >
+          <FontAwesomeIcon icon={faInfoCircle} />
+          Must match the first password input field.
+        </p>
+
+        <button
+          disabled={!validName || !validPwd || !validMatch ? true : false}
+        >
+          Sign Up
+        </button>
       </form>
     </section>
   );
