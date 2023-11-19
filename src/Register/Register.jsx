@@ -5,12 +5,11 @@ import {
   faInfoCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import styles from "./register.module.css";
 // regex statements: user regex - used for username validation
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
-const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{5,23}$/;
+const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
-export default function Register() {
+const Register = () => {
   //user referance
   const userRef = useRef();
   //error referance
@@ -23,40 +22,29 @@ export default function Register() {
   //state for the password field
   const [pwd, setPwd] = useState("");
   const [validPwd, setValidPwd] = useState(false);
-  //whether user focused on input field or not
   const [pwdFocus, setPwdFocus] = useState(false);
   //state for the matching password field
   const [matchPwd, setMatchPwd] = useState("");
   const [validMatch, setValidMatch] = useState(false);
-  //whether user focused on input field or not
   const [matchFocus, setMatchFocus] = useState(false);
   //state for an error message
   const [errMsg, setErrMsg] = useState("");
   //state if user successfully submitted the form or not
   const [success, setSuccess] = useState(false);
-
   //setting the focus on the username input when the component loads
   useEffect(() => {
     userRef.current.focus();
   }, []);
   //validating the username
   useEffect(() => {
-    //testing user state against the regex
-    const result = USER_REGEX.test(user);
-    console.log(result);
-    console.log(user);
-    setValidName(result);
+    setValidName(USER_REGEX.test(user));
   }, [user]);
   //validating the password
   useEffect(() => {
     //testing password state against the regex
-    const result = PWD_REGEX.test(pwd);
-    console.log(result);
-    console.log(pwd);
-    setValidPwd(result);
+    setValidPwd(PWD_REGEX.test(pwd));
     //comparing password to the match and returning boolean value
-    const match = pwd === matchPwd;
-    setValidMatch(match);
+    setValidMatch(pwd === matchPwd);
   }, [pwd, matchPwd]);
   //error message state
   useEffect(() => {
@@ -65,7 +53,7 @@ export default function Register() {
   }, [user, pwd, matchPwd]);
   //submitting the form
   const handleSubmit = async (e) => {
-    e.prevent.default();
+    e.preventDefault();
     //if by any chance button was enabled and allowed user to submit, it wasnt passing anyway, it wasnt passing my validation checks
     const v1 = USER_REGEX.test(user);
     const v2 = PWD_REGEX.test(pwd);
@@ -76,10 +64,12 @@ export default function Register() {
     console.log(user, pwd);
     setSuccess(true);
   };
+
   return (
     <>
       {success ? (
         <section>
+          {/*After submitting the form, user is routed to another page*/}
           <h1>Success!</h1>
           <p>
             <a href="#">Sign In</a>
@@ -90,7 +80,7 @@ export default function Register() {
           {/*if error exists it will display a message*/}
           <p
             ref={errRef}
-            className={errMsg ? styles.errmsg : styles.offscreen}
+            className={errMsg ? "errmsg" : "offscreen"}
             aria-live="assertive"
           >
             {errMsg}
@@ -100,12 +90,14 @@ export default function Register() {
             {/*USER INPUT*/}
             <label htmlFor="username">
               Username:
-              <span className={validName ? styles.valid : styles.hide}>
-                <FontAwesomeIcon icon={faCheck} />
-              </span>
-              <span className={validName || !user ? styles.hide : "invalid"}>
-                <FontAwesomeIcon icon={faTimes} />
-              </span>
+              <FontAwesomeIcon
+                icon={faCheck}
+                className={validName ? "valid" : "hide"}
+              />
+              <FontAwesomeIcon
+                icon={faTimes}
+                className={validName || !user ? "hide" : "invalid"}
+              />
             </label>
             <input
               type="text"
@@ -113,6 +105,7 @@ export default function Register() {
               ref={userRef}
               autoComplete="off"
               onChange={(e) => setUser(e.target.value)}
+              value={user}
               required
               aria-invalid={validName ? "false" : "true"}
               aria-describedby="uidnote"
@@ -123,9 +116,7 @@ export default function Register() {
             <p
               id="uidnote"
               className={
-                userFocus && user && !validName
-                  ? styles.instructions
-                  : styles.offscreen
+                userFocus && user && !validName ? "instructions" : "offscreen"
               }
             >
               <FontAwesomeIcon icon={faInfoCircle} />
@@ -135,20 +126,24 @@ export default function Register() {
               <br />
               Letters, numbers, underscores, hyphens allowed.
             </p>
-            {/*PASSWORD INPUT*/}
+
             <label htmlFor="password">
               Password:
-              <span className={validPwd ? styles.valid : styles.hide}>
-                <FontAwesomeIcon icon={faCheck} />
-              </span>
-              <span className={validPwd || !pwd ? styles.hide : "invalid"}>
-                <FontAwesomeIcon icon={faTimes} />
-              </span>
+              <FontAwesomeIcon
+                icon={faCheck}
+                className={validPwd ? "valid" : "hide"}
+              />
+              <FontAwesomeIcon
+                icon={faTimes}
+                className={validPwd || !pwd ? "hide" : "invalid"}
+              />
             </label>
+            {/*PASSWORD INPUT*/}
             <input
-              type="text"
+              type="password"
               id="password"
               onChange={(e) => setPwd(e.target.value)}
+              value={pwd}
               required
               aria-invalid={validPwd ? "false" : "true"}
               aria-describedby="pwdnote"
@@ -158,14 +153,10 @@ export default function Register() {
             {/*if password is not valid, this message will come up*/}
             <p
               id="pwdnote"
-              className={
-                pwdFocus && pwd && !validPwd
-                  ? styles.instructions
-                  : styles.offscreen
-              }
+              className={pwdFocus && !validPwd ? "instructions" : "offscreen"}
             >
               <FontAwesomeIcon icon={faInfoCircle} />
-              6 to 24 characters.
+              8 to 24 characters.
               <br />
               Must include uppercase and lowercase letters, a number and a
               special character.
@@ -177,6 +168,7 @@ export default function Register() {
               <span aria-label="dollar sign">$</span>{" "}
               <span aria-label="percent">%</span>
             </p>
+            {/*PASSWORD CONFIRMATION INPUT*/}
             <label htmlFor="confirm_pwd">
               Confirm Password:
               <FontAwesomeIcon
@@ -188,7 +180,6 @@ export default function Register() {
                 className={validMatch || !matchPwd ? "hide" : "invalid"}
               />
             </label>
-            {/*PASSWORD CONFIRMATION INPUT*/}
             <input
               type="password"
               id="confirm_pwd"
@@ -203,9 +194,7 @@ export default function Register() {
             <p
               id="confirmnote"
               className={
-                matchFocus && !validMatch
-                  ? styles.instructions
-                  : styles.offscreen
+                matchFocus && !validMatch ? "instructions" : "offscreen"
               }
             >
               <FontAwesomeIcon icon={faInfoCircle} />
@@ -218,12 +207,12 @@ export default function Register() {
               Sign Up
             </button>
           </form>
-          {/*SIGN IN LINK */}
+          {/*SIGN IN LINK  at the bottom of the page*/}
           <p>
             Already registered?
             <br />
-            <span className={styles.line}>
-              {/*Put router link here */}
+            <span className="line">
+              {/*put router link here*/}
               <a href="#">Sign In</a>
             </span>
           </p>
@@ -231,4 +220,6 @@ export default function Register() {
       )}
     </>
   );
-}
+};
+
+export default Register;
