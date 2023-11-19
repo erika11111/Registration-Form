@@ -1,6 +1,9 @@
-import styles from "./register.module.css";
 import { useRef, useState, useEffect } from "react";
-import { faCheck, faTimes, faInfoCircle } from "free-solid-svg-icons";
+import {
+  faCheck,
+  faTimes,
+  faInfoCircle,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // regex statements: user regex - used for username validation
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
