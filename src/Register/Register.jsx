@@ -4,6 +4,8 @@ import {
   faTimes,
   faInfoCircle,
 } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // regex statements: user regex - used for username validation
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
@@ -72,7 +74,7 @@ const Register = () => {
           {/*After submitting the form, user is routed to another page*/}
           <h1>Success!</h1>
           <p>
-            <a href="#">Sign In</a>
+            <Link to="login/">Sign In</Link>
           </p>
         </section>
       ) : (
@@ -212,8 +214,7 @@ const Register = () => {
             Already registered?
             <br />
             <span className="line">
-              {/*put router link here*/}
-              <a href="#">Sign In</a>
+              <Link to="login/">Sign In</Link>
             </span>
           </p>
         </section>
